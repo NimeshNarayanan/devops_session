@@ -1,5 +1,5 @@
 ---
-- hosts: webservers
+- hosts: all
   tasks:
     - name: add repo
       become: yes
@@ -9,12 +9,18 @@
         baseurl: https://rpm.nodesource.com/pub_7.x/el/6/x86_64/
         gpgcheck: no
 
+- hosts: webservers
+  vars:
+    node_version1: 7.9.0 
+  tasks:
     - name: install nodejs an nginx
       become: yes
-      yum: name={{item}} state=latest
+      vars:
+        node_version: 7.9.0
+      yum: name={{item}} state=present
       with_items:
         - nginx
-        - nodejs-7.8.0
+        - nodejs-{{node_version}}
 
     - name: check config
       become: yes
@@ -32,17 +38,10 @@
         name: nginx
         state: restarted
         enabled: yes
-
+    - debug:
+        msg: "hey{{node_version1}}"
 - hosts: webservers2
   tasks:
-    - name: add repo
-      become: yes
-      yum_repository:
-        name: nodejs 
-        description: node from rpm
-        baseurl: https://rpm.nodesource.com/pub_7.x/el/6/x86_64/
-        gpgcheck: no
-
     - name: install nodejs
       become: yes
       yum:
