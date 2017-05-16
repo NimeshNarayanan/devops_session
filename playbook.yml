@@ -10,17 +10,15 @@
         gpgcheck: no
 
 - hosts: webservers
-  vars:
-    node_version1: 7.9.0 
+  vars_files:
+    - var_config.yml
   tasks:
     - name: install nodejs an nginx
       become: yes
-      vars:
-        node_version: 7.9.0
       yum: name={{item}} state=present
       with_items:
         - nginx
-        - nodejs-{{node_version}}
+        - nodejs-{{webserver1_node_version}}
 
     - name: check config
       become: yes
@@ -38,14 +36,14 @@
         name: nginx
         state: restarted
         enabled: yes
-    - debug:
-        msg: "hey{{node_version1}}"
 - hosts: webservers2
+  vars_files:
+    - var_config.yml
   tasks:
     - name: install nodejs
       become: yes
       yum:
-        name: nodejs
+        name: nodejs-{{webserver2_node_version}}
         state: latest
 
 
