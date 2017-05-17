@@ -7,7 +7,7 @@
     - nginx
 
 - hosts: webservers2
-  vars_files:
-    - var_webserver2_config.yml
+  # vars_files:
+  #   - var_webserver2_config.yml
   roles:
     - nodejs
