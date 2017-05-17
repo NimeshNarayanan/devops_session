@@ -1,24 +1,18 @@
 ---
-- hosts: all
-  tasks:
-    - name: add repo
-      become: yes
-      yum_repository:
-        name: nodejs 
-        description: node from rpm
-        baseurl: https://rpm.nodesource.com/pub_7.x/el/6/x86_64/
-        gpgcheck: no
-
 - hosts: webservers
   vars_files:
     - var_config.yml
   tasks:
+    - name: Include nodejs roles
+      become: yes
+      include_role:
+        name: nodejs
+
     - name: install nodejs an nginx
       become: yes
       yum: name={{item}} state=present
       with_items:
         - nginx
-        - nodejs-{{webserver1_node_version}}
 
     - name: check config
       become: yes
@@ -37,13 +31,7 @@
         state: restarted
         enabled: yes
 - hosts: webservers2
-  vars_files:
-    - var_config.yml
   tasks:
-    - name: install nodejs
-      become: yes
-      yum:
-        name: nodejs-{{webserver2_node_version}}
-        state: latest
-
-
+    - name: Include nodejs roles
+      include_role:
+        name: nodejs
