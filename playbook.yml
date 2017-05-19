@@ -2,9 +2,14 @@
 - hosts: webserver1
   vars_files:
     - ./configs/webserver1.yml
+  tasks:
+    - name: debug variable
+      debug:
+        var: nginx_conf_result
   roles:
-    - nodejs
     - nginx
+    - nodejs
+
 
 - hosts: webserver2
   vars_files:
